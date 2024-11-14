@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerEnvironment>set ONEDNN_PRIMITIVE_CACHE_CAPACITY=0
+PATH=%PATH%;C:\Users\kk\Downloads\env_package\w_openvino_2024.5.0.dev20241031rc1\runtime\bin\intel64\Release;C:\Users\kk\Downloads\env_package\w_openvino_2024.5.0.dev20241031rc1\runtime\3rdparty\tbb\bin;C:\Users\kk\Downloads\env_package\openvino_tokenizers_2024.5.0.0rc1\runtime\bin\intel64\Release
+$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerEnvironment>set ONEDNN_PRIMITIVE_CACHE_CAPACITY=0
+PATH=%PATH%;C:\Users\kk\Downloads\env_package\w_openvino_2024.5.0.dev20241031rc1\runtime\bin\intel64\Debug;C:\Users\kk\Downloads\env_package\w_openvino_2024.5.0.dev20241031rc1\runtime\3rdparty\tbb\bin;C:\Users\kk\Downloads\env_package\openvino_tokenizers_2024.5.0.0rc1\runtime\bin\intel64\Debug;
+$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>
