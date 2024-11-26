@@ -49,8 +49,7 @@ std::shared_ptr<ov::CompiledModel> readOVModel(
 	if (model_path.find("text_encoder") != std::string::npos) {
 		model_name = "text_encoder";
 		ov_model = core_ptr->read_model(model_path + "/openvino_model.xml");
-		ov_compile_model_ptr =
-			std::make_shared<ov::CompiledModel>(core_ptr->compile_model(ov_model, device, ov_config));
+		ov_compile_model_ptr = std::make_shared<ov::CompiledModel>(core_ptr->compile_model(ov_model, device, ov_config));
 	}
 	else if (model_path.find("unet") != std::string::npos) {
 		model_name = "unet";
@@ -100,40 +99,6 @@ std::shared_ptr<ov::CompiledModel> readOVModelCache(
 	}
 	return ov_compiled_cache_ptr;
 }
-
-//std::shared_ptr<ov::CompiledModel> readOVModelCache(
-//		std::shared_ptr<ov::Core> core_ptr, 
-//		std::string model_cache_path,
-//		std::string device,
-//		ov::AnyMap ov_config,
-//		bool encrypt_tag) {
-//	std::shared_ptr<ov::CompiledModel> ov_compiled_cache_ptr;
-//	if (encrypt_tag) {
-//		std::cout << "== "<< model_cache_path<< " model decryption ==" << std::endl;
-//		std::istringstream ov_cache_str = decryptCompiledModel(model_cache_path);
-//		if (model_cache_path.find("tokenizer") != std::string::npos) {
-//			ov_compiled_cache_ptr = std::make_shared<ov::CompiledModel>(core_ptr->import_model(ov_cache_str, "CPU", {}));
-//			auto new_req = ov_compiled_cache_ptr->create_infer_request();
-//		}
-//		else {
-//			ov_compiled_cache_ptr = std::make_shared<ov::CompiledModel>(core_ptr->import_model(ov_cache_str, device, ov_config));
-//			auto new_req = ov_compiled_cache_ptr->create_infer_request();
-//		}
-//	}
-//	else {
-//		std::cout << "==" << model_cache_path << " do not need decryption ==" << std::endl;
-//		auto ifstr = std::ifstream(model_cache_path, std::ifstream::binary);
-//		if (model_cache_path.find("tokenizer") != std::string::npos) {
-//			ov_compiled_cache_ptr = std::make_shared<ov::CompiledModel>(core_ptr->import_model(ifstr, "CPU"));
-//			auto new_req = ov_compiled_cache_ptr->create_infer_request();
-//		}
-//		else {
-//			ov_compiled_cache_ptr = std::make_shared<ov::CompiledModel>(core_ptr->import_model(ifstr, device, ov_config));
-//			auto new_req = ov_compiled_cache_ptr->create_infer_request();
-//		}
-//	}
-//	return ov_compiled_cache_ptr;
-//}
 
 void saveOVModelCache(
 		std::shared_ptr<ov::CompiledModel>& ov_compiled_ptr, 

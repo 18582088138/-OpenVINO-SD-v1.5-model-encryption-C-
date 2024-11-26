@@ -18,7 +18,7 @@ std::shared_ptr<ov::CompiledModel> readOVModel(
 std::shared_ptr<ov::CompiledModel> readOVModelCache(
 	std::shared_ptr<ov::Core> core_ptr,
 	std::string model_cache_path,
-	std::string device = "CPU",
+	std::string device = "GPU",
 	ov::AnyMap ov_config = {},
 	bool encrypt_tag = true);
 

@@ -106,6 +106,7 @@ struct OVStableDiffusionModels {
 	}
 
 	void unload_infer_req() {
+		// reset inference request
 		tokenizer_inf_req.reset();
 		text_encoder_inf_req.reset();
 		unet_inf_req.reset();
@@ -114,11 +115,13 @@ struct OVStableDiffusionModels {
 	}
 
 	void unload_model() {
+		// reset intermediate variable(CPU only)
 		tokenizer_model->release_memory();
 		text_encoder_model->release_memory();
 		unet_model->release_memory();
 		vae_decoder_model->release_memory();
 
+		// reset compiled model
 		tokenizer_model.reset();
 		text_encoder_model.reset();
 		unet_model.reset();
