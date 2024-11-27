@@ -7,8 +7,8 @@
 
 #include <openvino/runtime/core.hpp>
 
-#include "model_utils.hpp"
-#include "encrypt_utils.hpp"
+#include "utils/model_utils.hpp"
+#include "utils/encrypt_utils.hpp"
 
 struct OVStableDiffusionModels {
 	std::shared_ptr<ov::CompiledModel> tokenizer_model;
@@ -114,13 +114,15 @@ struct OVStableDiffusionModels {
 		std::cout << "==== OV SD InferRequest UnLoading Success ====" << std::endl;
 	}
 
-	void unload_model() {
-		// reset intermediate variable(CPU only)
-		tokenizer_model->release_memory();
-		text_encoder_model->release_memory();
-		unet_model->release_memory();
-		vae_decoder_model->release_memory();
-
+	void unload_model(std::string device) {
+		if (device == "CPU") {
+			// reset intermediate variable(CPU only)
+			tokenizer_model->release_memory();
+			text_encoder_model->release_memory();
+			unet_model->release_memory();
+			vae_decoder_model->release_memory();
+		}
+		
 		// reset compiled model
 		tokenizer_model.reset();
 		text_encoder_model.reset();
@@ -129,9 +131,9 @@ struct OVStableDiffusionModels {
 		std::cout << "==== OV SD Models UnLoading Success ====" << std::endl;
 	}
 
-	void unload() {
+	void unload(std::string device) {
 		unload_infer_req();
-		unload_model();
+		unload_model(device);
 	}
 };
-#endif
+#endif // MODEL_H

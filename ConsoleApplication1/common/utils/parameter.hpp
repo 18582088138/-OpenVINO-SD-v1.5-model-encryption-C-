@@ -13,9 +13,9 @@ struct ParameterConfig {
 	int waiting_time = 1;
 	int num_images = 1;
 	int loop_num = 2;
-	bool encrypt_tag = false;   //if true, will encrypt model,  if false, the blob is still plain text 
-	//std::vector<std::string> pos_prompts = {"lion", "tiger", "grapes" ,"watermelon", "apple"};
-	std::vector<std::string> pos_prompts = { "fox", "sheep", "wolf" ,"orange", "ox" };
+	bool encrypt_tag = true;   //if true, will encrypt model,  if false, the blob is still plain text 
+	std::vector<std::string> pos_prompts = {"lion", "tiger", "grapes" ,"watermelon", "apple"};
+	//std::vector<std::string> pos_prompts = { "fox", "sheep", "wolf" ,"orange", "ox" };
 	std::vector<std::string> neg_prompts = {};
 	void parameters(int argc, char* argv[]);
 };
