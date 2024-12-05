@@ -33,6 +33,9 @@ void ParameterConfig::parameters(int argc, char* argv[]) {
 		else if (arg == "--neg_prompts" && i + 1 < argc) {
 			seed = std::atoi(argv[++i]);
 		}
+		else if (arg == "--gen_shape" && i + 1 < argc) {
+			seed = std::atoi(argv[++i]);
+		}
 	}
 	return;
 }

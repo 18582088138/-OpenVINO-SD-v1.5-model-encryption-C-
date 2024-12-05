@@ -148,8 +148,7 @@ void sd_generation(OVStableDiffusionModels ov_sd_models,
 	uint32_t user_seed,
 	uint32_t num_images,
 	uint32_t num_inference_steps,
-	uint32_t img_height,
-	uint32_t img_width) {
+	std::vector<uint32_t> gen_shape) {
 	Timer t("Running OV Stable Diffusion pipeline");
 	const size_t hd_size = static_cast<size_t>(ov_sd_models.text_encoder_model->output(0).get_partial_shape()[2].get_length());
 	ov::Tensor text_embeddings = text_encoder_infer(
@@ -160,6 +159,8 @@ void sd_generation(OVStableDiffusionModels ov_sd_models,
 	scheduler->set_timesteps(num_inference_steps);
 	std::vector<std::int64_t> timesteps = scheduler->get_timesteps();
 
+	uint32_t img_width = gen_shape[0];
+	uint32_t img_height = gen_shape[1];
 	for (uint32_t n = 0; n < num_images; n++) {
 		std::uint32_t seed = num_images == 1 ? user_seed : user_seed + n;
 		const bool read_np_latent = false;

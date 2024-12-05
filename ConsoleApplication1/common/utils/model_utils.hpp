@@ -13,7 +13,8 @@ std::shared_ptr<ov::CompiledModel> readOVModel(
 	std::shared_ptr<ov::Core>& core_ptr,
 	std::string model_path,
 	std::string device = "GPU",
-	ov::AnyMap ov_config = {});
+	ov::AnyMap ov_config = {},
+	std::vector<uint32_t> gen_shape = { 512,512 });  // {width, height}
 
 std::shared_ptr<ov::CompiledModel> readOVModelCache(
 	std::shared_ptr<ov::Core> core_ptr,

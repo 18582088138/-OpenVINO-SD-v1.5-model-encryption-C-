@@ -29,7 +29,8 @@ struct OVStableDiffusionModels {
 	void load_model(std::shared_ptr<ov::Core>& core_ptr,
 			std::string model_path,
 			std::string device = "GPU",
-			ov::AnyMap ov_config = {}) {
+			ov::AnyMap ov_config = {},
+			std::vector<uint32_t> gen_shape = { 512,512 }) {  // {width, height}
 		std::string tokenizer_path = model_path + "/tokenizer/";
 		std::string text_encoder_path = model_path + "/text_encoder/";
 		std::string unet_path = model_path + "/unet/";
@@ -37,7 +38,7 @@ struct OVStableDiffusionModels {
 
 		tokenizer_model = readOVModel(core_ptr, tokenizer_path, "CPU");
 		text_encoder_model = readOVModel(core_ptr, text_encoder_path, device, ov_config);
-		unet_model = readOVModel(core_ptr, unet_path, device, ov_config);
+		unet_model = readOVModel(core_ptr, unet_path, device, ov_config, gen_shape);
 		vae_decoder_model = readOVModel(core_ptr, vae_decoder_path, device, ov_config);
 		std::cout << "==== OpenVINO StableDiffusion Models Loading Success ====" << std::endl;
 	}

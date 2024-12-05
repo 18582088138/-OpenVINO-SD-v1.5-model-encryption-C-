@@ -59,7 +59,7 @@ void run_test(ParameterConfig parameter_config) {
 	OVStableDiffusionModels ov_sd_models;
 	ov_sd_models.load_model_cache(core_ptr, model_path, device, ov_config, encrypt_tag);
 	ov_sd_models.create_infer_req();
-	std::string positive_prompt = "tiger";
+	std::string positive_prompt = "A cat holding a sign that says hello intel these two words";
 	std::string negative_prompt = "";
 	sd_generation(ov_sd_models, positive_prompt, negative_prompt, user_seed, num_images, num_inference_steps);
 	ov_sd_models.unload(device);
@@ -80,6 +80,7 @@ void run_test_multi(ParameterConfig parameter_config) {
 	bool encrypt_tag = parameter_config.encrypt_tag;    //
 	std::vector<std::string> pos_prompts_list = parameter_config.pos_prompts;
 	std::vector<std::string> neg_prompts_list = parameter_config.neg_prompts;
+	std::vector<uint32_t> gen_shape = parameter_config.gen_shape;
 
 	std::cout << "Model Path: " << parameter_config.model_path << std::endl;
 	std::cout << "Target Device: " << parameter_config.device << std::endl;
@@ -100,18 +101,21 @@ void run_test_multi(ParameterConfig parameter_config) {
 	}
 
 	OVStableDiffusionModels ov_sd_models;
+	ov_sd_models.load_model(core_ptr, model_path, device, ov_config, gen_shape);
 	//ov_sd_models.load_model_cache(core_ptr, model_path, device, ov_config, encrypt_tag);
-	ov_sd_models.load_model_cache(core_ptr, model_path, device, ov_config, encrypt_tag);
 	ov_sd_models.create_infer_req();
 	uint32_t x = 0;
 	std::string negative_prompt = "";
 
-	while (x < loop_num) {
+	while (x < loop_num) 
+	{
 		try {
 			std::cout << "Starting iteration " << x + 1 << " of 2..." << std::endl;
 			//sd_generation(ov_sd_models, positive_prompt, negative_prompt);
 			for (const std::string& positive_prompt : pos_prompts_list) {
-				sd_generation(ov_sd_models, positive_prompt, negative_prompt, user_seed, num_images, num_inference_steps);
+				std::cout << "Successfully completed iteration " << x + 1 << std::endl;
+				std::cout << "Successfully completed iteration " << x + 1 << std::endl;
+				sd_generation(ov_sd_models, "A boy is riding a car", negative_prompt, user_seed, num_images, num_inference_steps, gen_shape);
 			}
 			std::cout << "Successfully completed iteration " << x + 1 << std::endl;
 			std::cout << "Waiting 5 seconds before next iteration..." << std::endl;
@@ -139,20 +143,19 @@ void run_test_multi(ParameterConfig parameter_config) {
 
 
 int main(int argc, char* argv[]) {
-		ParameterConfig parameter_config;
-		parameter_config.parameters(argc, argv);
+	ParameterConfig parameter_config;
+	parameter_config.parameters(argc, argv);
 
-		{
-			std::thread gen_thread(run_test_multi, parameter_config);
-			if (gen_thread.joinable()) {
-				gen_thread.join();
-			}
-
+	{
+		std::thread gen_thread(run_test_multi, parameter_config);
+		if (gen_thread.joinable()) {
+			gen_thread.join();
 		}
-#ifdef DEBUG_MEMORY
-		DebugMemoryInfo("finally");
-#endif
 
+	}
+#ifdef DEBUG_MEMORY
+	DebugMemoryInfo("finally");
+#endif
 	std::cout << "Completed all iterations, entering monitoring loop..." << std::endl;
 	std::cout << "sleep now!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
 	while (true)  ////////////////tempory test, need to remove soon
@@ -160,14 +163,14 @@ int main(int argc, char* argv[]) {
 		std::cout << "test idle cpu cl issue ..." << std::endl;
 		std::this_thread::sleep_for(std::chrono::seconds(100000));
 	}
-	
+
 	return 0;
 
 
 
-	
-	
-	
+
+
+
 
 
 }

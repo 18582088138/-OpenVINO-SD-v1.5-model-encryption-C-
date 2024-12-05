@@ -31,9 +31,6 @@ void sd_generation(OVStableDiffusionModels ov_sd_models,
 	uint32_t user_seed = 42,
 	uint32_t num_images = 1,
 	uint32_t num_inference_steps = 4,
-	uint32_t img_height = 512,
-	uint32_t img_width = 512);
-
-
+	std::vector<uint32_t> gen_shape = { 512,512 });
 
 #endif // PIPELINE_H

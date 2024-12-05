@@ -14,11 +14,16 @@
 #include "openvino/pass/manager.hpp"
 #include "openvino/core/preprocess/pre_post_process.hpp"
 
-std::shared_ptr<ov::Model> ov_unet_ppp(std::shared_ptr<ov::Model> unet_model) {
+std::shared_ptr<ov::Model> ov_unet_ppp(std::shared_ptr<ov::Model> unet_model,
+									   std::vector<uint32_t> gen_shape = { 512,512 }) {
 	ov::preprocess::PrePostProcessor unet_ppp(unet_model);
+
+	uint32_t unet_w = gen_shape[0] / 8;
+	uint32_t unet_h = gen_shape[1] / 8;
+
 	unet_ppp.input("sample").tensor()  // Replace with the actual input name
 		.set_element_type(ov::element::f32) // Set input tensor element type, NOT ov::element::i8
-		.set_shape({ 2, 4, 64, 64 });       // Set input tensor shape, not 1, 4, 64, 64 ;  not 2, 4, 512, 512  (512 is  cmd ConsoleApplication1.exe  -d GPU  -p "A boy is swimming"    -m  "C:\\sd_ov_int8"  --width 512 --height 512 )
+		.set_shape({ 2, 4, unet_h, unet_w });       // Set input tensor shape, not 1, 4, 64, 64 ;  not 2, 4, 512, 512  (512 is  cmd ConsoleApplication1.exe  -d GPU  -p "A boy is swimming"    -m  "C:\\sd_ov_int8"  --width 512 --height 512 )
 	// Configure output tensor preprocessing
 	unet_ppp.output(0).tensor()  // Assuming you have one output or want to configure the first one
 		.set_element_type(ov::element::f32);  // Set output tensor element type, NOT ov::element::i8
@@ -40,7 +45,8 @@ std::shared_ptr<ov::CompiledModel> readOVModel(
 		std::shared_ptr<ov::Core>& core_ptr,
 		std::string model_path, 
 		std::string device,
-		ov::AnyMap ov_config) {
+		ov::AnyMap ov_config,
+		std::vector<uint32_t> gen_shape) {  // {width, height}
 	std::string model_name;
 	std::shared_ptr<ov::Model> ov_model;
 	std::shared_ptr<ov::Model> ppp_ov_model;
@@ -54,7 +60,7 @@ std::shared_ptr<ov::CompiledModel> readOVModel(
 	else if (model_path.find("unet") != std::string::npos) {
 		model_name = "unet";
 		ov_model = core_ptr->read_model(model_path + "/openvino_model.xml");
-		ppp_ov_model = ov_unet_ppp(ov_model);
+		ppp_ov_model = ov_unet_ppp(ov_model, gen_shape);
 		ov_compile_model_ptr =
 			std::make_shared<ov::CompiledModel>(core_ptr->compile_model(ppp_ov_model, device, ov_config));
 	}
